@@ -1,10 +1,40 @@
 const express = require('express')
 const app = express()
-const port = 3000
+const port = process.env.PORT || 8000
 const path = require('path')
 
+
+let posts = [  
+    { id: 1, title: 'Post One' },
+    { id: 2, title: 'Post Two' },
+    { id: 3, title: 'Post Three' }
+  ]
+
 // setup static folder
-app.use(express.static(path.join(__dirname, 'public')))
+// app.use(express.static(path.join(__dirname, 'public')))
+
+
+
+app.get('/api/posts', (req, res) => {
+  const limit = parseInt(req.query.limit);
+
+  if (!isNaN(limit) && limit > 0) {
+    res.status(200).json(posts.slice(0, limit))
+  } else {
+    res.json(posts)
+  }
+
+})
+
+
+
+app.get('/api/posts/:id', (req, res) => {
+  const id = parseInt(req.params.id)
+  res.json(posts.filter((post) => 
+    post.id === id
+  ))
+})
+
 
 
 
